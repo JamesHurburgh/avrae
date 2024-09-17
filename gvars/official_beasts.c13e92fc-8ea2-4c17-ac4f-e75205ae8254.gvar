@@ -1,0 +1,340 @@
+Almiraj:
+  cr: 0
+Baboon:
+  cr: 0
+Badger:
+  cr: 0
+Bat:
+  cr: 0
+Cat:
+  cr: 0
+Chimeric Baboon:
+  cr: 0
+Chimeric Cat:
+  cr: 0
+Chimeric Fox:
+  cr: 0
+Chimeric Hare:
+  cr: 0
+Chimeric Rat:
+  cr: 0
+Chimeric Weasel:
+  cr: 0
+Crab:
+  cr: 0
+Cranium Rat:
+  cr: 0
+Deer:
+  cr: 0
+Eagle:
+  cr: 0
+Flying Monkey:
+  cr: 0
+Fox:
+  cr: 0
+Frog:
+  cr: 0
+Giant Fire Beetle:
+  cr: 0
+Goat:
+  cr: 0
+Hare:
+  cr: 0
+Hawk:
+  cr: 0
+Hyena:
+  cr: 0
+Jackal:
+  cr: 0
+Kingsport:
+  cr: 0
+Knucklehead Trout:
+  cr: 0
+Lizard:
+  cr: 0
+Octopus:
+  cr: 0
+Onyx:
+  cr: 0
+Owl:
+  cr: 0
+Pig:
+  cr: 0
+Quipper:
+  cr: 0
+Rat:
+  cr: 0
+Raven:
+  cr: 0
+Scorpion:
+  cr: 0
+Sea Horse:
+  cr: 0
+Seal:
+  cr: 0
+Sheep:
+  cr: 0
+Space Guppy:
+  cr: 0
+Space Mollymawk:
+  cr: 0
+Spider:
+  cr: 0
+Vulture:
+  cr: 0
+Weasel:
+  cr: 0
+Blood Hawk:
+  cr: 0.125
+Camel:
+  cr: 0.125
+Diseased Giant Rat:
+  cr: 0.125
+Dolphin:
+  cr: 0.125
+Flying Snake:
+  cr: 0.125
+Giant Crab:
+  cr: 0.125
+Giant Rat:
+  cr: 0.125
+Giant Weasel:
+  cr: 0.125
+Mastiff:
+  cr: 0.125
+Mountain Goat:
+  cr: 0.125
+Mule:
+  cr: 0.125
+Poisonous Snake:
+  cr: 0.125
+Pony:
+  cr: 0.125
+Stirge:
+  cr: 0.125
+Axe Beak:
+  cr: 0.25
+Boar:
+  cr: 0.25
+Cave Badger:
+  cr: 0.25
+Cow:
+  cr: 0.25
+Deep Rothé:
+  cr: 0.25
+Dimetrodon:
+  cr: 0.25
+Elk:
+  cr: 0.25
+Fastieth:
+  cr: 0.25
+Giant Badger:
+  cr: 0.25
+Giant Bat:
+  cr: 0.25
+Giant Centipede:
+  cr: 0.25
+Giant Frog:
+  cr: 0.25
+Giant Lizard:
+  cr: 0.25
+Giant Owl:
+  cr: 0.25
+Giant Poisonous Snake:
+  cr: 0.25
+Giant Riding Lizard:
+  cr: 0.25
+Giant Snail:
+  cr: 0.25
+Giant Space Hamster:
+  cr: 0.25
+Giant Wolf Spider:
+  cr: 0.25
+Hadrosaurus:
+  cr: 0.25
+Ox:
+  cr: 0.25
+Panther:
+  cr: 0.25
+Pteranodon:
+  cr: 0.25
+Riding Horse:
+  cr: 0.25
+Rothé:
+  cr: 0.25
+Snarl:
+  cr: 0.25
+Space Swine:
+  cr: 0.25
+Swarm of Bats:
+  cr: 0.25
+Swarm of Rats:
+  cr: 0.25
+Swarm of Ravens:
+  cr: 0.25
+Velociraptor:
+  cr: 0.25
+Walrus:
+  cr: 0.25
+Wolf:
+  cr: 0.25
+Ape:
+  cr: 0.5
+Awakened Giant Wasp:
+  cr: 0.5
+Black Bear:
+  cr: 0.5
+Fiendish Giant Spider:
+  cr: 0.5
+Giant Canary:
+  cr: 0.5
+Giant Dragonfly:
+  cr: 0.5
+Giant Sea Eel:
+  cr: 0.5
+Giant Wasp:
+  cr: 0.5
+Jaculi:
+  cr: 0.5
+Koi Prawn:
+  cr: 0.5
+Reef Shark:
+  cr: 0.5
+Space Eel:
+  cr: 0.5
+Crocodile:
+  cr: 0.5
+Giant Goat:
+  cr: 0.5
+Giant Sea Horse:
+  cr: 0.5
+Warhorse:
+  cr: 0.5
+Awakened Brown Bear:
+  cr: 1
+Clawfoot:
+  cr: 1
+Deinonychus:
+  cr: 1
+Giant Flying Spider:
+  cr: 1
+Giant Raven:
+  cr: 1
+Giant Rocktopus:
+  cr: 1
+Giant Swan:
+  cr: 1
+Ice Spider:
+  cr: 1
+Snow Leopard:
+  cr: 1
+Young Winter Wolf:
+  cr: 1
+Brown Bear:
+  cr: 1
+Dire Wolf:
+  cr: 1
+Giant Eagle:
+  cr: 1
+Giant Hyena:
+  cr: 1
+Giant Octopus:
+  cr: 1
+Giant Spider:
+  cr: 1
+Giant Toad:
+  cr: 1
+Giant Vulture:
+  cr: 1
+Lion:
+  cr: 1
+Tiger:
+  cr: 1
+Giant Crayfish:
+  cr: 2
+Giant White Moray Eel:
+  cr: 2
+Huge Polar Bear:
+  cr: 2
+Ice Spider Queen:
+  cr: 2
+Relic Sloth:
+  cr: 2
+Young Bulette:
+  cr: 2
+Allosaurus:
+  cr: 2
+Aurochs:
+  cr: 2
+Cave Bear:
+  cr: 2
+Enormous Tentacle:
+  cr: 2
+Giant Boar:
+  cr: 2
+Giant Constrictor Snake:
+  cr: 2
+Giant Elk:
+  cr: 2
+Hunter Shark:
+  cr: 2
+Plesiosaurus:
+  cr: 2
+Polar Bear:
+  cr: 2
+Quetzalcoatlus:
+  cr: 2
+Rhinoceros:
+  cr: 2
+Saber-Toothed Tiger:
+  cr: 2
+Amphisbaena:
+  cr: 3
+Armored Saber-Toothed Tiger:
+  cr: 3
+Awakened White Moose:
+  cr: 3
+Giant Lightning Eel:
+  cr: 3
+Giant Snapping Turtle:
+  cr: 3
+Ankylosaurus:
+  cr: 3
+Giant Scorpion:
+  cr: 3
+Killer Whale:
+  cr: 3
+Spotted Lion:
+  cr: 3
+Giant Coral Snake:
+  cr: 4
+Giant Subterranean Lizard:
+  cr: 4
+Stegosaurus:
+  cr: 4
+Elephant:
+  cr: 4
+Giant Walrus:
+  cr: 4
+Brontosaurus:
+  cr: 5
+Hulking Crab:
+  cr: 5
+Giant Crocodile:
+  cr: 5
+Giant Shark:
+  cr: 5
+Titanothere:
+  cr: 5
+Triceratops:
+  cr: 5
+Mammoth:
+  cr: 6
+Giant Ape:
+  cr: 7
+Huge Giant Crab:
+  cr: 8
+Sperm Whale:
+  cr: 8
+Tyrannosaurus Rex:
+  cr: 8

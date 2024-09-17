@@ -1,0 +1,44 @@
+# RP XP
+using(exp="bd5e6af1-55e9-4c5b-b814-8f9b447091e7")
+using(aeorstralia="bbb1e07e-51cd-483b-850b-05ce1b53144c")
+using(logTools="11743454-0aca-46a6-ad73-9b902a65fbeb")
+
+footer="-footer '!rpxp <messageLink> | Made by James Hurburgh#0'"
+args=&ARGS&
+if len(args) != 1 or not aeorstralia.is_discord_message_url(args[0]):
+    return f"embed -desc 'Requires exactly one argument that is a message link.\ne.g. `https://discord.com/channels/0000/0000/0000`' -color '#FF0000' {footer}"
+
+ch=character()
+ch_lvl=ch.levels.total_level
+character_name = ch.name.lower().replace('\'','’')
+expected_channel_name,is_expected_character_channel,expected_channel_message=aeorstralia.get_character_channel()
+if not is_expected_character_channel:
+    return f"embed -desc '{expected_channel_message}' -thumb '{ch.image}' -color '#FF0000' {footer}"
+
+has_claimed_daily_rp,most_recent_daily_rp_claim,last_daily_rp_reset,next_daily_rp_reset=aeorstralia.has_claimed_daily_rp()
+if has_claimed_daily_rp:
+    return f"embed -desc 'Daily RP XP already claimed on <t:{most_recent_daily_rp_claim}>. Next claim can be made <t:{next_daily_rp_reset}>' -thumb '{ch.image}' -color '#FF0000' {footer}"
+
+dailyRPAmount = aeorstralia.levelToRpXP()[ch_lvl]
+
+new_str, removed, added = exp.modify_xp(dailyRPAmount, f"`{dailyRPAmount}` Daily RP", return_added=True)
+
+xp_log, xp_log_description = added[0]
+xp_log_string = f"**<t:{logTools.log_to_epoch(xp_log)}:d>:** {xp_log_description}\n"
+
+next_level, next_level_xp, remaining_xp = exp.next_lvl()
+total_xp = exp.get_xp()
+
+format_string = '{:,}'
+
+embed = [
+  "embed",
+  f"-title '{character_name} gains {dailyRPAmount} Experience for daily RP.'",
+  f"-f 'Log Entry Added|{xp_log_string}'",
+  f"-f 'Next reset|<t:{next_daily_rp_reset}>'",
+  f"-f 'Current Experience|{int(total_xp):,}'",
+  f"-f 'Next Level: {next_level}|{int(next_level_xp):,} *({int(remaining_xp):,} remaining)*'",
+  f"-f 'Link to roleplay message|{args[0]}'",
+  f"-thumb '{ch.image}'",
+  footer]
+return "\n".join(embed)

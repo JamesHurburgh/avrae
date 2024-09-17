@@ -1,0 +1,311 @@
+"""
+# Bin Chicken Fight!
+By JamesHurburgh#0
+
+Filename:
+bcf.e5a5b79b-8c8b-47e1-b615-09280423d1c6.gvar
+
+Server Alias:
+!serveralias bcf <drac2>
+using(bcf="e5a5b79b-8c8b-47e1-b615-09280423d1c6")
+comb = combat()
+return bcf.bcf(comb)
+</drac2>
+
+"""
+using(cr_conversions = "1a0c253c-33df-400c-bcf8-c750bd39c0cf")
+using(encounter_tools = "9f41132f-0d00-42dc-b809-9ad74c2dfa3a")
+using(aeorstralia = "bbb1e07e-51cd-483b-850b-05ce1b53144c")
+using(embed_utilities="09d308cb-5bf8-4759-8070-19ab0312aa05")
+
+footer = "-footer '!bcf | Made by James Hurburgh#0'"
+mackenzie_thumbnail = "https://raw.githubusercontent.com/aeorstralia/tuppers/main/NPCs/Mackenzie.png"
+mackenzie_worried_thumbnail = "https://raw.githubusercontent.com/aeorstralia/tuppers/main/NPCs/Mackenzie-worried.png"
+max_level_spread = 3
+victory_messages = [
+    "Mackenzie's brows shoot up in surprise, but he quickly bursts into a wide grin, clapping loudly as the crowd roars its approval. With a nod of respect to you, he starts plotting the next, even fiercer, contest.",
+    "A smirk tugs at Mackenzie's lips as he watches the monster fall, his gaze locking onto you with newfound respect. He gives a slow, deliberate nod, acknowledging your feat before turning to prepare the next challenge.",
+    "Mackenzie blinks in shock, then quickly composes himself, offering you a sharp nod of approval. His mind is already racing with ideas for the next fight as the arena buzzes with excitement.",
+    "Mackenzie's mouth curls into a smile as the monster is felled, a glint of admiration in his eyes. He doesn't waste time on words, simply raising a hand in acknowledgment before turning to plan the next round.",
+    "As the monster crumples to the ground, Mackenzie's grin widens, and he lets out a low, appreciative whistle. He gestures for you to step forward, already thinking of how to up the ante for the next battle.",
+    "Mackenzie's eyes sparkle with delight as the creature is defeated, and he gives you a quick, approving nod. The thrill of the moment fuels his determination to make the next fight even more challenging.",
+    "Mackenzie's expression is one of pure satisfaction as he watches the final blow land, his grin growing wider. Without missing a beat, he claps you on the back and starts musing aloud about the next encounter.",
+    "The surprise on Mackenzie's face quickly gives way to a broad smile as the crowd erupts in cheers. He gives you a firm nod, signaling his respect, before turning his thoughts to the next arena challenge.",
+    "Mackenzie's lips quirk into a pleased grin as the monster falls, and he meets your eyes with a look of newfound respect. He waves off the crowd's cheers, already planning how to make the next fight even tougher.",
+    "Mackenzie's shock is brief, quickly replaced by a wide grin as he watches the monster go down. He gives you a thumbs up, silently promising that the next battle will be even more intense."
+]
+defeat_messages = [
+    "Mackenzie’s expression hardens as the battle takes a turn, and without hesitation, he leaps into the fray, driving off the remaining monsters with quick precision. With the arena clear, he kneels by your side, swiftly stabilising your wounds.",
+    "As the tide turns against you, Mackenzie jumps in, dispatching the remaining creatures with a practiced hand. Once the danger has passed, he immediately crouches beside you, administering aid with a determined focus, his earlier bravado replaced by quiet care.",
+    "Seeing the fight slipping away, Mackenzie charges in, his blade flashing as he scatters the remaining monsters. He then hurries to your side, expertly stopping the bleeding and ensuring you're out of danger, his face set in grim determination.",
+    "Mackenzie’s grin fades as the monsters overwhelm you, and he quickly steps in, driving them off with precise strikes. After ensuring the arena is safe, he turns his full attention to your injuries, working swiftly and methodically to stabilize you.",
+    "When the battle turns dire, Mackenzie wastes no time, cutting down the remaining foes with practiced ease. Once the threat is gone, he kneels beside you, his hands moving quickly to tend to your wounds, his expression focused and serious.",
+    "With the situation growing desperate, Mackenzie joins the fray, dispatching the remaining creatures with swift efficiency. As the last monster falls, he immediately tends to your injuries, his hands steady as he works to ensure your survival.",
+    "Mackenzie’s eyes narrow as he sees you faltering, and he swiftly intervenes, scattering the remaining monsters with lethal precision. Once the arena is clear, he moves to your side, calmly and efficiently stabilising you.",
+    "The fight takes a turn for the worse, and Mackenzie jumps in without hesitation, driving off the monsters with a flurry of strikes. After securing the area, he kneels beside you, his hands working quickly to patch up your wounds, his focus unwavering.",
+    "Mackenzie doesn’t hesitate as the monsters begin to overwhelm you, cutting them down with practiced ease. Once the arena is secure, he turns his attention to you, calmly and efficiently stabilising your injuries, his expression one of determined care.",
+    "As the battle turns against you, Mackenzie steps in, dispatching the remaining monsters with swift, decisive blows. With the danger past, he kneels beside you, his hands moving with practiced ease to stop the bleeding and ensure your safety."
+]
+
+
+def create_error_embed(title, description, fields=[], thumb=None):
+    title_text = title.replace("'","’")
+    description_text = description.replace("'","’")
+    embed = []
+    embed.append("embed")
+    embed.append("-color #FF0000")
+    embed.append(f"-title '{title_text}'")
+    embed.append(f"-desc '{description_text}'")
+    if not thumb == None:
+        embed.append(f"-thumb '{thumb}'")
+    embed.append("\n".join(fields))
+    embed.append(footer)
+    return "\n".join(embed)
+
+def create_field(title, description, inline=False):
+    title_text = title.replace("'","’")
+    description_text = description.replace("'","’")
+    inline_text = "|inline" if inline else ""
+    return f"-f '{title_text}|{description_text}{inline_text}'"
+
+def get_cr_above_xp(xp):
+    # Iterate over the sorted list and find the first CR with an XP value greater than the input XP
+    for cr, cr_xp in cr_conversions.cr_value_to_xp_dictionary.items():
+        if cr_xp > xp:
+            return cr
+
+    # If no CR has an XP value greater than the input, return the highest CR
+    return sorted_cr_xp[-1][0]
+
+def get_health_status(hp, max_hp, player=False):
+    healthy = "😀"    # Full health or above
+    injured = "🤕"    # Under full health, but over half
+    bloodied = "🩸"   # Half health or under but not critical
+    critical = "💢"   # 25 percent health or less but not dead 
+    dead = "💀"       # Zero health
+    unconcious = "😵" # Zero health player
+
+    if hp <= 0 and player:
+        status = "Unconcious"
+        status_icon = unconcious
+    elif hp <= 0:
+        status = "Dead"
+        status_icon = dead
+    elif hp <= max_hp * 0.25:
+        status = "Critical"
+        status_icon = critical
+    elif hp <= max_hp / 2:
+        status = "Bloodied"
+        status_icon = bloodied
+    elif hp < max_hp:
+        status = "Injured"
+        status_icon = injured
+    else:
+        status = "Healthy"
+        status_icon = healthy
+    
+    return status, status_icon
+
+
+def is_combatant_monster(combatant):
+    return not combatant is None and not combatant.monster_name is None
+
+def is_combatant_player(combatant):
+    return not combatant is None and combatant.monster_name is None and combatant.levels.total_level > 0
+
+def bcf(combat):
+    # Make sure combat has been started
+    is_in_combat = combat is not None
+    if not is_in_combat:
+        return embed_utilities.create_error_embed("This channel is not in combat", "Type `!init begin deathdelete` to start combat, then each player needs to run `!init join` to add their character and roll initiative.  Once everyone has joined, run `!bcf` again.", footer=footer)
+
+    # Get all the combatants
+    combatants = combat.combatants
+    combatantCount = len(combatants)
+
+    if combatantCount is 0:
+        return embed_utilities.create_error_embed("There are no combatants in this combat.", "Each player needs to run `!init join` to add their character and roll initiative.  Once everyone has joined, run `!bcf` again.", footer=footer)
+    
+    # Get all the players
+    player_characters = [combatant for combatant in combatants if is_combatant_player(combatant)]
+    player_character_count = len(player_characters)
+
+    if player_character_count is 0:
+        return embed_utilities.create_error_embed("There are no player characters in this combat.", "Each player needs to run `!init join` to add their character and roll initiative.  Once everyone has joined, run `!bcf` again.", footer=footer)
+
+    # Build the party overview
+    party_size = encounter_tools.lookup_party_size(player_character_count)
+    party_overview_title = f"**{party_size} party:**\n"
+    party_overview = ""
+    levels = []
+    for player_character in player_characters:
+        levels.append(player_character.levels.total_level)
+        player_character_name = player_character.name
+        player_hp_status, player_hp_icon = get_health_status(player_character.hp, player_character.max_hp, player=True) 
+        max_bcf_xp = aeorstralia.level_to_bcf_xp[player_character.levels.total_level]
+        party_overview += f"{player_hp_icon} <{player_hp_status}>  {player_character_name} [Level: {player_character.levels.total_level}] [Max XP: {max_bcf_xp}]\n"
+    party_overview_field = create_field(party_overview_title, party_overview)
+
+    pc_levels = [pc.levels.total_level for pc in player_characters]
+    min_level = min(pc_levels)
+    max_level = max(pc_levels)
+    level_spread = max_level - min_level + 1
+
+    # Check the players aren't too different in levels
+    if level_spread > max_level_spread:
+        return embed_utilities.create_error_embed("Player character levels are too different.", "Parties may only be formed with people across 3 consecutive levels (e.g. 4-6, 8-10).  Remove a player character with `!init remove <name>`.", [party_overview_field], footer=footer)
+
+    combat_started = combat.round_num > 0
+
+    monsters = [combatant for combatant in combatants if is_combatant_monster(combatant)]
+    monster_count = len(monsters)
+
+    totalXP = 0
+    # Build the monster overview
+    if monster_count > 0:
+        monster_overview_title = "Monsters"
+        crs = []
+        monster_overview = ""
+        for monster in monsters:
+            crs.append(monster.levels.total_level)
+            monsterXP = cr_conversions.cr_to_xp(monster.levels.total_level)
+            modified_monster_xp = floor(monsterXP / 2)
+            totalXP += modified_monster_xp
+            monster_hp_status, monster_hp_icon = get_health_status(monster.hp, monster.max_hp) 
+
+            monster_overview += f"{monster_hp_icon} <{monster_hp_status}> {monster.name}: {monster.monster_name} [CR: **{cr_conversions.float_to_cr(monster.levels.total_level)}** XP: {monsterXP} / 2 = **{modified_monster_xp}**]\n"
+        
+        monster_overview_field = create_field(monster_overview_title, monster_overview)
+        living_monsters = [monster for monster in monsters if monster.hp > 0]
+        living_monsters_count = len(living_monsters)
+
+    xp_per_player_character = floor(totalXP / player_character_count)
+
+    xp_overview_title = "Experience Points"
+    xp_overview = ""
+    xp_overview += f"Total XP: __{totalXP}__\n"
+    xp_overview += f"Total XP per Player Character: __{xp_per_player_character}__\n"
+    xp_overview += f"Each player should run the following in their character channel:\n`!bcfxp -xp {xp_per_player_character} -link https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}`"
+    xp_overview_field = create_field(xp_overview_title, xp_overview)
+    
+    injured_player_characters = [pc for pc in player_characters if pc.hp != pc.max_hp]
+
+    if not combat_started and len(injured_player_characters) > 0:
+        injured_player_characters_string = ", ".join([pc.name for pc in injured_player_characters])
+        return embed_utilities.create_error_embed("Don't start a fight injured!", f"Mackenzie stops you from going into the arena.  **\"Hey, {injured_player_characters_string}!  Maybe you should have a rest before you start another fight.\"**\nUse `!lr` to take a long rest then use `!bcf` again.", [party_overview_field], footer=footer)
+
+    # Whose turn is it?
+    current_combatant = combat.current
+    player_turn = is_combatant_player(current_combatant)
+    monster_turn = is_combatant_monster(current_combatant)
+
+    if combat_started and monster_count == 0:
+        return embed_utilities.create_error_embed("Fight started with no monsters!", "Mackenzie calls out to you **\"Hey!  If you want to fight you need to wait for the monsters!\"**\nUse `!i prev` to return to round 0, then type `!bcf` again.", [party_overview_field], footer=footer)
+    
+    if not combat_started and monster_count == 0:
+        # Get the target XP level
+        target_xp = aeorstralia.level_to_bcf_xp[max_level] * 2 * player_character_count
+        target_cr = get_cr_above_xp(target_xp)
+
+        ## Build a dictionary of official, and personal beasts.
+        official_beasts = "c13e92fc-8ea2-4c17-ac4f-e75205ae8254"
+        aeorstralia_critters = "1fe711ef-a230-4c48-8ebf-5573d29a54ad"
+        creatures = {}
+        for gvar in set([official_beasts, aeorstralia_critters]):
+            creatures.update(load_yaml(get_gvar(gvar)))
+        for creature in creatures:
+            creatures[creature]['name'] = creature
+            
+        cr_list = [cr for cr in creatures if float(creatures[cr]['cr']) == target_cr]
+        creature_name_chosen = randchoice(list(cr_list))
+
+        embed = []
+        embed.append("embed")
+        embed.append(f"-thumb {mackenzie_thumbnail}")
+        embed.append(
+            create_field(f"Mackenzie releases a {creature_name_chosen} for you to fight!",
+                         f"Copy and paste or type the following into chat to add the {creature_name_chosen} to combat and get started."))
+        embed.append(
+            create_field(f"Command",
+                         f"```\n!multiline\n!init madd \"{creature_name_chosen}\" rollhp\n!init next\n```"))
+        embed.append(party_overview_field)
+        embed.append(footer)
+
+        return "\n".join(embed)
+    
+    if not combat_started and monster_count > 0:
+        embed = []
+        embed.append("embed")
+        embed.append(f"-thumb {mackenzie_thumbnail}")
+        embed.append(
+            create_field(f"Mackenzie nods encouragingly.",
+                         f"**\"What are you waiting for?  Get fighting already!\"**.  "))
+        embed.append(
+            create_field(f"Use !init next to progress the initiative.",
+                         f"`!init next`"))
+        embed.append(party_overview_field)
+        embed.append(monster_overview_field)
+        embed.append(footer)
+
+        return "\n".join(embed)
+    
+    all_pc_hp_remaining = sum(pc.hp for pc in player_characters)
+
+    if living_monsters_count > 0 and all_pc_hp_remaining > 0:
+        embed = []
+        embed.append("embed")
+        embed.append("-color #FFA500")
+        embed.append(f"-thumb {mackenzie_thumbnail}")
+        if player_turn:
+            embed.append(
+                create_field(f"Mackenzie shrugs.",
+                            f"**\"I don't know what you're doing.  Maybe think about what attacks you can make.\"**"))
+            embed.append(
+                create_field(f"Use the !action list command to check what attacks you have available.",
+                            f"`!action list`"))
+        elif monster_turn:
+            embed.append(
+                create_field(f"Mackenzie points at the {living_monsters[0].monster_name}.",
+                            f"**\"Don’t look at me.  Keep your eyes on the {living_monsters[0].monster_name}!\"**"))
+            embed.append(
+                create_field(f"Use the !auto command to automate the monters attacks.",
+                            f"`!auto`"))
+        embed.append(party_overview_field)
+        embed.append(monster_overview_field)
+        embed.append(footer)
+
+        return "\n".join(embed)
+    
+    if living_monsters_count == 0 and all_pc_hp_remaining > 0:
+        embed = []
+        embed.append("embed")
+        embed.append("-color #F1C40F")
+        embed.append(f"-thumb {mackenzie_thumbnail}")
+        embed.append(create_field(f"Victory!", randchoice(victory_messages)))
+        embed.append(party_overview_field)
+        embed.append(monster_overview_field)
+        embed.append(xp_overview_field)
+        embed.append(
+            create_field(f"Cleaning up",
+                         f"End the battle with `!init end` then confirm.\nClose the ticket by using the `/close` Ticket Tool command."))
+        embed.append(footer)
+
+        return "\n".join(embed)
+    
+    if living_monsters_count > 0 and all_pc_hp_remaining == 0:
+        embed = []
+        embed.append("embed")
+        embed.append("-color #000000")
+        embed.append(f"-thumb {mackenzie_worried_thumbnail}")
+        embed.append(create_field(f"Defeat!", randchoice(defeat_messages)))
+        embed.append(party_overview_field)
+        embed.append(
+            create_field(f"Cleaning up",
+                         f"End the battle with `!init end` then confirm.\nClose the ticket by using the `/close` Ticket Tool command."))
+        embed.append(footer)
+
+        return "\n".join(embed)
+
+
+
+    

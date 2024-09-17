@@ -1,0 +1,138 @@
+"""
+# Aeorstralia Scenes
+
+aeorstralia_scenes.932b817d-db25-4dbd-acfc-1f07d75cbeb9.gvar
+
+using(aeorstralia_scenes = "932b817d-db25-4dbd-acfc-1f07d75cbeb9")
+"""
+
+using(embed_utilities="09d308cb-5bf8-4759-8070-19ab0312aa05")
+
+scenes = [
+    {
+        "name": "Heeler's House",
+        "channel_id": 1023593435908808754,
+        "channel_name": "🏡heelers-house",
+        "description": "You see this dusty picture hanging in the entrance way, a vision of the house you currently stand in though it must predate whatever befell this continent. The picket fence is now missing boards, some of which are reinforcing the front door you just walked through. What once was a family home seems to have been converted into a town hall of sorts. A place to speak with the ruler of this town.",
+        "flavour": [
+            "A cool breeze rustles the leaves of the lone frangipani tree in the front yard, its fragrant blossoms scattering gently across the lawn.",
+            "The faint sound of wind chimes echoes from the back porch.",
+            "A small, dusty soccer ball rests forgotten in the corner of the yard, half-hidden by the thick grass.",
+            "The scent of fresh eucalyptus wafts through the yard, mingling with the faint aroma of baking from the kitchen.",
+            "The paint on the mailbox is slightly chipped, revealing the older layers beneath.",
+            "A gecko, stuck on the wall, slowly falls end over end until it reaches the ground.",
+            "An old swing set creaks softly in the breeze, its wooden seat polished smooth from years of use.",
+            "A weathered beach towel hangs limply over the railing of the front deck, its vibrant colors faded from the harsh sun."
+        ],
+        "image": "https://media.discordapp.net/attachments/1023593435908808754/1033274431788810290/AFB1D233-4C1E-4966-A311-B800F5FF9BE8.jpg"
+    },
+    {
+        "name" : "Sea Gate",
+        "channel_id": 1023593166424789142,
+        "channel_name" : "🚪sea-gate",
+        "description": "What was once a idyllic beachfront with soft, white sand and full of tourists and locals enjoying a day in the sun has been fortified to protect the settlement from nautical threats. The captains of the guard and what seem to be their descendants are keeping the peace and manning the singular gate.",
+        "image": "https://media.discordapp.net/attachments/1023593166424789142/1033398635762810960/2022-10-23.png"
+    },
+    {
+        "name" : "Land Gates",
+        "channel_id": 1023593212843143270,
+        "channel_name" : "🚪land-gates",
+        "description": "Though most of the immigration and emigration took place at the Sea Gate, there were a handful of gates that allowed the Brisbandites to venture into the dangerous wilderness. Whether it was to the dump to hunt wild beasts and dispose of refuse or out to explore how the landscape had changed since this so called Third Sundering. The Terriers also manned these gates, keeping track of who had left and who had entered through the rough hewn barrier that kept the city safe.",
+        "image": "https://media.discordapp.net/attachments/1023593212843143270/1033529491915558923/IMG_0042.gif"
+    },
+    {
+        "name" : "Bruce's way",
+        "channel_id": 1067984973400920205,
+        "channel_name" : "🚶bruces-way",
+        "description": "From south to north with the Gateway bridge spanning the great Brisbandit River, the old highay now know as Bruce's Way provides access to all parts of Brisbandit.",
+        "image": None
+    },
+    {
+        "name" : "Glasshouse Primary 𝔻𝕆𝕁𝕆",
+        "channel_id": 1023593309597343845,
+        "channel_name" : "👊glasshouse-primary-dojo",
+        "description": "You come upon a circular wooden building with a large oak sign out front. The first part of the sign is carved in beautiful block text with what seems to be immense time and care which reads **GLASSHOUSE PRIMARY** but then the engraving stops and a new chunk of wood has been nailed on top and in roughly hewn letters like someone wrote it with a greataxe is the word **DOJO**.",
+        "image": "https://media.discordapp.net/attachments/1023593309597343845/1023658158608105673/IMG_9883.webp"
+    },
+    {
+        "name" : "Hammerbarn",
+        "channel_id": 1033370031809110219,
+        "channel_name" : "🛒hammerbarn",
+        "description": "The huge steel frame building is in good repair, three times the size of the other nearby buildings that have fallen in disarray. Near the front door a small tent serves sausages on roughly cut slices of bread with a poorly constructed sign indicating that coins raised will help the local children. Inside there are aisles of merchants all hawking various wares.",
+        "image": "https://i.imgur.com/RWGIf8F.png"
+    },
+    {
+        "name" : "Café",
+        "channel_id": 1033524946514747432,
+        "channel_name" : "☕cafe",
+        "description": "Some of the structure of the playground remains, but most has been converted to serve what is now an open air café complete with BBQ grill and all manner of food available on the [menu](https://www.dndbeyond.com/sources/basic-rules/equipment#FoodDrinkandLodging).\nThe tables and chairs are clean and well kept and the faces are friendly and welcoming.",
+        "image": "https://i.imgur.com/AVG2hCt.jpeg"
+    },
+    {
+        "name" : "Golden Crown Takeaway",
+        "channel_id": 1033525194893033523,
+        "channel_name" : "🥡golden-crown-takeaway",
+        "description": "The Golden Crown Takeaway's bright inviting look is gone and the restaurant is dim and damp as though someone has left a tap running once too often. Inside there are a few tables and food of dubious quality is available and the servers seem to want to get rid of you as quickly as possible.\n**Only accessible to those with Thieves Cant**\n||By reading the menu a certain way you understand to order number 35, extra chicken no onions. The numbered items on the menu only goes up to 29. When you ask for this, the server checks there is no-one else around and then ushers you into the <#1257679583587602445>.||",
+        "image": "https://i.imgur.com/b1nrwKR.png"
+    },
+    {
+        "name" : "Airport",
+        "channel_id": 1034587793520857129,
+        "channel_name" : "🛬airport",
+        "description": "The ruins of a sprawling building lay next to a huge open field with roads crisscrossing at all angles. Legend has it that this was once the home of huge iron beasts that swallowed people whole and spewed them out thousands of kilometres away. Near the field a huge tower rises into the air and is surprisingly well maintained compared to the state of the rest of the nearby structures. The doors to this towers are locked tight and seem to be covered in arcane symbols.\n**Accessible only with Arcana proficiency or truesight**\n||Looking at the arcane symbols you can make out a message along the lines of: \"We're doing some super secret special stuff here. If you'd like to join in, the real entrance is around to the left under the window. Knock fourteen times.\"\n\nThose who have been through the ritual can acccess the <#1285510090954117200>||",
+        "image": "https://i.imgur.com/JI0XPyO.png"
+    },
+    {
+        "name" : "Top of the Tower",
+        "channel_id": 1285510090954117200,
+        "channel_name": "Top of the Tower",
+        "description": "The top of the airport tower.  A spacious, circular room with windows encircling the entire space—undoubtedly the most important room in the building. ",
+        "flavour": [
+            "Gloria is looking through a shelf and finally exclaims \"Ah ha!\" reaching between the books and pulling out a half eaten sandwich.",
+            "Gloria is halfway between eating a sandwich and getting a book off a shelf.",
+            "Gloria is holding a half eaten sandwich in her mouth without moving it and staring intently at the pages of a tome, slowly turning it's pages.",
+            "Gloria is cleaning what looks like scorch marks off a table that is empty other than a rather singed book.",
+            "Jewels is busy cleaning empty glass bottles on a nearby bench.",
+            "Jewels is organising empty glass bottles on a bench.",
+            "Jewels is pottering around filling various vials and flasks.",
+            "Jewels is going through a bag which is making clinking sounds.",
+        ],
+        "image": None
+    },
+    {
+        "name" : "The Dump",
+        "channel_id": 1053747960573329508,
+        "channel_name" : "🚛the-dump",
+        "description": "The city’s dump was left outside of the wall as it attracted too many threats for the townspeople to deal with. All matter of beasts could be found digging through the  refuse to find scraps to survive on, even those from this new planet had started to find a hold here. The metal bins were overturned like some overgrown child’s play toys while some of the more recently buried sites have been dug up. Then there’s the smell, the horrid, putrid, acrid burn of rotting garbage and meat wafting through the entire place.",
+        "image": "https://media.discordapp.net/attachments/1053747960573329508/1053768156537180300/image0.jpg"
+    },
+    {
+        "name" : "Outpost",
+        "channel_id": 1273185907197083738,
+        "channel_name" : "",
+        "description": "",
+        "image": None
+    },
+    {
+        "name" : "",
+        "channel_name" : "",
+        "description": "",
+        "image": None
+    }
+]
+footer = "-footer 'Type \"!scene\" to end a scene or start a new one.'"
+
+def build_scene_embed(scene):
+    description = scene.description
+    if 'flavour' in scene and len(scene['flavour']) > 0:
+        description += f"\n{randchoice(scene['flavour'])}"
+    return embed_utilities.create_embed(title=scene.name,
+                                        description=description,
+                                        image=scene.image,
+                                        footer=footer)
+
+def get_scene_from_channel(channel_name):
+    matching_scenes = [scene for scene in scenes if scene.channel_name.lower() == channel_name.lower()]
+    if len(matching_scenes) == 1:
+        return build_scene_embed(matching_scenes[0])
+    return None

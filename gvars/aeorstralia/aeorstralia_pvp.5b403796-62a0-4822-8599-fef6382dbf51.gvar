@@ -1,0 +1,108 @@
+"""
+# Aeorstralia PVP
+
+Filename:
+aeorstralia_pvp.5b403796-62a0-4822-8599-fef6382dbf51.gvar
+
+Server Alias:
+!serveralias pvp echo <drac2>
+using(aeorstralia_pvp="5b403796-62a0-4822-8599-fef6382dbf51")
+comb = combat()
+return aeorstralia_pvp.pvp(comb)
+</drac2>
+
+"""
+pf = ctx.prefix
+n = "\n"
+c = combat()
+ch = character()
+
+footer = "-footer '!pvp | Made by James Hurburgh#0'"
+mackenzie_thumbnail = "https://raw.githubusercontent.com/aeorstralia/tuppers/main/NPCs/Mackenzie.png"
+
+using(embed_utilities="09d308cb-5bf8-4759-8070-19ab0312aa05")
+
+maps = [
+    {"options": "c23g~5A5A5Ao1:-1", "width": 44, "height": 29, "image_url": "https://i.pinimg.com/originals/0c/5c/0a/0c5c0a2c505908b440328a7b521c3a54.jpg"},
+    {"options": "c130g~000000o10:6", "width": 60, "height": 39, "image_url": "https://i.redd.it/52rzmkjrtbka1.jpg"},
+    {"options": "c23g~5A5A5A", "width": 46, "height": 30, "image_url": "https://content.encounterkit.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://content.encounterkit.com/map/preview/d4cf98c2483c42e65c94c87c012b8be9.webp",
+        "starting_locations": ["I12", "I18", "P8", "P22", "AE8", "AE22", "AL12", "AL18"]},
+    {"options": "c23g~5A5A5Ao2:3", "width": 46, "height": 30, "image_url": "https://img.photouploads.com/file/PhotoUploads-com/SCMf.jpg",
+        "starting_locations": ["I12", "I18", "P8", "P22", "AE8", "AE22", "AL12", "AL18"]},
+    {"options": "c23g~5a5a5ao2:3", "width": 46, "height": 30, "image_url": "https://img.photouploads.com/file/PhotoUploads-com/SCMK.jpg",
+        "starting_locations": ["I12", "I18", "P8", "P22", "AE8", "AE22", "AL12", "AL18"]},
+    {"options": "c23g~5a5a5ao2:3", "width": 46, "height": 30, "image_url": "https://img.photouploads.com/file/PhotoUploads-com/SCMO.jpg",
+        "starting_locations": ["I12", "I18", "P8", "P22", "AE8", "AE22", "AL12", "AL18"]}
+]
+
+def wrap_codeblock(codeblock):
+    return f"```\n{codeblock}\n```"
+
+def shuffle(arr):
+    # Iterate over the array from the last element down to the second element
+    for i in range(len(arr) - 1, 0, -1):
+        # Pick a random index from 0 to i
+        j = randint(i)
+        # Swap arr[i] with the element at random index arr[j]
+        arr[i], arr[j] = arr[j], arr[i]
+
+def pvp(combat):
+    
+    if combat is None:
+
+        out = ["multiline"]
+
+        out.append(f"""{pf}init begin """)
+        out.append(f"""{pf}init add 20 DM -p """)
+        fields = [
+            embed_utilities.create_field("Command", f"`{pf}init join`"),
+            embed_utilities.create_field("Once everyone has joined run !pvp again", f"`{pf}pvp`")
+        ]
+        starting_embed = embed_utilities.create_embed("Alright then.  Who's ready for a fight?", "", fields=fields, thumb=mackenzie_thumbnail, footer=footer)
+        out.append(f"""{pf}{starting_embed}""")
+        return f"""{n.join(out)}"""
+
+        # multiline = []
+        # multiline.append("!multiline")
+        # multiline.append("!init begin")
+        # multiline.append("!init add 20 DM -p")
+        
+        # return embed_utilities.create_embed("Start Combat", wrap_codeblock("\n".join(multiline)), footer=footer)
+    else:
+        mapinfo = None
+        # Collect information on every combatant
+        for combatant in combat.combatants:
+
+            # Grab map information, if it exists
+            for attack in combatant.attacks:
+                if attack.name == 'map':
+                    mapinfo=attack.raw.automation[-1].text
+
+        if mapinfo is None:
+            # choose a random map
+            map = randchoice([map for map in maps if 'starting_locations' in map])
+            starting_locations = map['starting_locations']
+            shuffle(starting_locations)
+            # Collect information on every combatant
+            for combatant in combat.combatants:
+                if combatant.name == "DM":
+                    combatant.add_effect("map",
+                        attacks=[{
+                            "attack": {
+                                "_v": 2,
+                                "name": "map",
+                                # "verb": "shows off the power of",
+                                'automation': [{
+                                    'type': 'text',
+                                    'text': f'Size: {map.width}x{map.height} ~ Background: {map.image_url} ~ Options: {map.options}',
+                                    'title': 'Effect'
+                                }]
+                            }
+                        }])
+                elif not combatant is None and combatant.monster_name is None and combatant.levels.total_level > 0:
+                    combatant.set_note(f"Location: {starting_locations.pop()}")
+            return embed_utilities.create_embed("Map added to DM.  Players randomly located.", "Run `!map` to see map.")
+        else:
+            return embed_utilities.create_embed("Map info already exists", "")
+
+    return embed_utilities.create_embed("Didn't do much", "")

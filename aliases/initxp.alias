@@ -1,0 +1,76 @@
+<drac2>
+using(crConversions = "1a0c253c-33df-400c-bcf8-c750bd39c0cf")
+using(encounter_tools="9f41132f-0d00-42dc-b809-9ad74c2dfa3a")
+
+embed = []
+embed.append("embed")
+description = ""
+
+def getOutput():
+
+    comb = combat()
+
+    if comb is None:
+        return "This channel is not in combat."
+
+    combatants = comb.combatants
+    combatantCount = len(combatants)
+
+    if combatantCount is 0:
+        return "There are no combatants in this combat."
+    
+    playerCharacters = [combatant for combatant in combatants if combatant.monster_name is None and combatant.levels.total_level > 0]
+    playerCharacterCount = len(playerCharacters)
+    
+    if playerCharacterCount is 0:
+        return "There are no player characters in this combat."
+    party_size = encounter_tools.lookup_party_size(playerCharacterCount)
+
+    monsters = [combatant for combatant in combatants if not combatant.monster_name is None]
+    monsterCount = len(monsters)
+    
+    if monsterCount is 0:
+        return "There are no monsters in this combat."
+    
+    result = ""
+    result += f"There are {playerCharacterCount} player characters and {monsterCount} monsters in this combat.\n"
+    
+    result += f"**{party_size} party:**\n"
+    levels = []
+    for playerCharacter in playerCharacters:
+        levels.append(playerCharacter.levels.total_level)
+        playerCharacter_name = playerCharacter.name.replace("'","")
+        result += f"- {playerCharacter_name} [Level: {playerCharacter.levels.total_level}]\n"
+        
+    result += f"**Monsters:**\n"
+    totalXP = 0
+    crs = []
+    for monster in monsters:
+        crs.append(monster.levels.total_level)
+        monsterXP = crConversions.cr_to_xp(monster.levels.total_level)
+        totalXP += monsterXP
+        result += f"{monster.name}: {monster.monster_name} [CR: {monster.levels.total_level} XP: {monsterXP}]\n"
+    
+    xpPerPlayerCharacter = floor(totalXP / playerCharacterCount)
+    
+    result += f"**Totals**\n"
+    result += f"Total XP: __{totalXP}__\n"
+    result += f"Total XP per Player Character: __{xpPerPlayerCharacter}__\n"
+
+    monster_multiplier = encounter_tools.get_monster_multiplier(monsterCount, party_size)
+   
+    player_count, monster_count, monster_xp, monster_adjusted_xp, encounter_difficulty = encounter_tools.analyse_encounter(levels, crs)
+    result += f"**Encounter:**\n"
+
+    result += f"Monster number multiplier: __{monster_multiplier}__\n"
+    result += f"Modified encounter XP: __{monster_adjusted_xp}__\n"
+    result += f"Encounter difficulty: __{encounter_difficulty}__\n"
+    
+    return result
+
+embed.append(f"-desc '{getOutput()}'")
+
+embed.append("-footer '!initxp | Made by James Hurburgh#6265'")
+
+return "\n".join(embed)
+</drac2>

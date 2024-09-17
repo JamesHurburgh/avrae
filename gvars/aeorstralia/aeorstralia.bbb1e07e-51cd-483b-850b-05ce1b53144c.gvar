@@ -1,0 +1,223 @@
+"""
+# Module	: Aeorstralia
+# Author	: JamesHurburgh#0
+# gvar id	: bbb1e07e-51cd-483b-850b-05ce1b53144c
+
+# Filename
+aeorstralia.bbb1e07e-51cd-483b-850b-05ce1b53144c.gvar
+
+# Import
+using(aeorstralia="bbb1e07e-51cd-483b-850b-05ce1b53144c")
+
+"""
+
+
+using(logTools="11743454-0aca-46a6-ad73-9b902a65fbeb")
+
+level_to_bcf_xp = {
+		1: 50,
+		2: 100,
+		3: 200,
+		4: 250,
+		5: 550,
+		6: 700,
+		7: 850,
+		8: 1050,
+		9: 1200,
+		10: 1400,
+		11: 1800,
+		12: 2250,
+		13: 2550,
+		14: 2850,
+		15: 3200,
+		16: 3600,
+		17: 4400,
+		18: 4750,
+		19: 5450,
+		20: 6350,
+	}
+
+def levelToBcfXP():
+	return level_to_bcf_xp
+
+level_to_pvp_gold = {
+		1: 10,
+		2: 20,
+		3: 40,
+		4: 50,
+		5: 110,
+		6: 140,
+		7: 170,
+		8: 210,
+		9: 240,
+		10: 280,
+		11: 360,
+		12: 450,
+		13: 510,
+		14: 570,
+		15: 640,
+		16: 720,
+		17: 880,
+		18: 950,
+		19: 1090,
+		20: 1270
+	}
+
+def levelToPvpGold():
+	return level_to_pvp_gold
+
+level_to_rp_xp = {
+		1: 20,   
+		2: 40,   
+		3: 80,   
+		4: 100,  
+		5: 220,  
+		6: 280,  
+		7: 340,  
+		8: 420,  
+		9: 480,  
+		10: 560, 
+		11: 720, 
+		12: 900, 
+		13: 1020,
+		14: 1140,
+		15: 1280,
+		16: 1440,
+		17: 1760,
+		18: 1900,
+		19: 2180,
+		20: 2540
+	}
+
+def levelToRpXP():
+	return level_to_rp_xp
+
+server_icon_url = "https://cdn.discordapp.com/icons/1016450799024488458/b7766d02dd256d1485db5bd34fcf72c7.webp"
+daily_rp_message = "Daily RP"
+weekly_bcf_message = "Weekly BCF"
+reset_epoch = 1679670000
+
+def get_character_channel():
+	ch = character()
+	character_level = ch.levels.total_level
+	character_name = ch.name.lower().replace('\'','')
+	expected_channel_name = f"{character_level}_{character_name.replace(' ','-')}"
+	is_expected_character_channel = ctx.channel.name.lower() == expected_channel_name
+	expected_channel_message = f"Current character is **{character_name} [lvl:{character_level}]**, so I expected the channel name to be **{expected_channel_name}** but was **{ctx.channel.name}**.\nDo you have the right character selected?\nTry setting this channel as the character channel by entering `!char channel <character name>`."
+	return expected_channel_name, is_expected_character_channel, expected_channel_message
+
+def daily_reset():
+    ticks_per_day=60*60*24
+    lst_reset=floor((time()-reset_epoch)/ticks_per_day)*ticks_per_day+reset_epoch
+    nxt_reset=lst_reset+ticks_per_day
+    return lst_reset, nxt_reset
+
+def weekly_reset():
+    ticks_per_week=60*60*24*7
+    lst_reset=floor((time()-reset_epoch)/ticks_per_week)*ticks_per_week+reset_epoch
+    nxt_reset=lst_reset+ticks_per_week
+    return lst_reset, nxt_reset
+
+def has_claimed_daily_rp(ch = character()):
+	xplog = ch.get_cvar("xplog").split("\n")
+	last_reset, next_reset = daily_reset()
+
+	# Filter the log to find entries that contain
+	daily_rp_entries = [entry for entry in xplog if daily_rp_message.lower() in entry.lower()]
+
+	if not daily_rp_entries:
+		return False, None, last_reset, next_reset
+
+	# Get the most recent "daily rp" entry based on its timestamp
+	most_recent_entry = logTools.log_to_epoch(int(max(daily_rp_entries, key=lambda entry: entry.split(":")[0]).split(":")[0]))
+
+	# Check if the most recent entry is within the current reset period
+	return last_reset <= most_recent_entry < next_reset, most_recent_entry, last_reset, next_reset
+
+def has_claimed_weekly_bcf(ch = character()):
+    xplog = ch.get_cvar("xplog")
+    last_reset, next_reset = weekly_reset()
+
+    # Filter the log to find entries that contain
+    weekly_bcf_entries = [entry for entry in xplog if weekly_bcf_message.lower() in entry['message'].lower()]
+
+    if not weekly_bcf_entries:
+        return False  # No "daily rp" entries found
+
+    # Get the most recent "daily rp" entry based on its timestamp
+    most_recent_entry = max(daily_rp_entries, key=lambda entry: entry['timestamp'])
+
+    # Check if the most recent entry is within the current reset period
+    if last_reset <= most_recent_entry['timestamp'] < next_reset:
+        return True
+
+    return False
+
+def is_discord_message_url(url):
+    # Split the URL into parts by '/'
+    parts = url.split('/')
+
+    # Check if the URL has exactly 7 parts and matches the expected structure
+    if (len(parts) == 7 and
+        parts[0] == "https:" and
+        parts[1] == "" and
+        (parts[2] == "discord.com" or parts[2] == "discordapp.com")  and
+        parts[3] == "channels" and
+        all(part.isdigit() for part in parts[4:7])):
+        return True
+    
+    return False
+
+def is_discord_channel_url(url):
+    # Split the URL into parts by '/'
+    parts = url.split('/')
+
+    # Check if the URL has exactly 6 parts and matches the expected structure
+    if (len(parts) == 6 and
+        parts[0] == "https:" and
+        parts[1] == "" and
+        (parts[2] == "discord.com" or parts[2] == "discordapp.com")  and
+        parts[3] == "channels" and
+        all(part.isdigit() for part in parts[4:6])):
+        return True
+    
+    return False
+
+def wm_rewards(char=character()):
+      
+	character_name = char.name.replace("'", "")
+	character_level = char.levels.total_level
+	has_claimed_daily_rp, most_recent_daily_rp_claim, last_daily_rp_reset, next_daily_rp_reset = has_claimed_daily_rp()
+	last_weekly_reset, next_weekly_reset = weekly_reset()
+
+	fields = []
+
+	description = ""
+	description += f"{character_name} is level {character_level} and can earn the following:\n"
+
+
+	daily_field = f"-f '🌅 Daily (Resets ⏱️ <t:{next_daily_rp_reset}>)|"
+	if has_claimed_daily_rp:
+		daily_field += f"  - ✅ {level_to_rp_xp[character_level]} XP from Roleplaying (Claimed <t:{most_recent_daily_rp_claim}>).\n"
+	else:
+		daily_field += f"  - ⏳ {level_to_rp_xp[character_level]} XP from Roleplaying (Unclaimed).\n"
+	daily_field += "'"
+
+	fields.append(daily_field)
+
+	weekly_field = f"-f '📅 Weekly (Resets ⏱️ <t:{next_weekly_reset}>)|"
+	weekly_field += f"- {level_to_bcf_xp[character_level]} XP from a Bin Chicken Fight\n"
+	weekly_field += f"- {level_to_pvp_gold[character_level]} gp from a Player vs Player battle\n"
+	weekly_field += f"- Attempt to establish or upgrade a location (see `!help location`)'"
+
+	fields.append(weekly_field)
+
+	embed = []
+	embed.append("embed")
+	embed.append(f"-thumb '{char.image}'")
+	embed.append(f"-desc '{description}'")
+	embed.append("\n".join(fields))
+
+	embed.append("-footer '!wmrewards | Made by James Hurburgh#6265'")
+
+	return "\n".join(embed)

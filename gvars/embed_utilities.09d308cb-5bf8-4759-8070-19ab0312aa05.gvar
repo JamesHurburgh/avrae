@@ -1,0 +1,36 @@
+"""
+# Embed Utilities
+By JamesHurburgh#0
+
+Filename:
+embed_utilities.09d308cb-5bf8-4759-8070-19ab0312aa05.gvar
+
+Import
+using(embed_utilities="09d308cb-5bf8-4759-8070-19ab0312aa05")
+
+"""
+def sanitise(text):
+    return text.replace("'","’")
+
+def create_embed(title, description, fields=[], thumb=None, image=None, footer=None, color=None):
+    embed = []
+    embed.append("embed")
+    if not color == None:
+        embed.append(f"-color {color}")
+    embed.append(f"-title '{sanitise(title)}'")
+    embed.append(f"-desc '{sanitise(description)}'")
+    if not thumb == None:
+        embed.append(f"-thumb '{thumb}'")
+    if not image == None:
+        embed.append(f"-image '{image}'")
+    embed.append("\n".join(fields))
+    if not footer == None:
+        embed.append(footer)
+    return "\n".join(embed)
+
+def create_error_embed(title, description, fields=[], thumb=None, footer=None):
+    return create_embed(title=title, description=description, fields=fields, thumb=thumb, footer=footer, color="#FF0000")
+
+def create_field(title, description, inline=False):
+    inline_text = "|inline" if inline else ""
+    return f"-f '{sanitise(title)}|{sanitise(description)}{inline_text}'"

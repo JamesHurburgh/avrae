@@ -1,0 +1,211 @@
+"""
+# Babel Fish Translator
+
+## Author
+    
+JamesHurburgh#0
+
+## Filename:
+
+babel.c54fb619-aad8-421b-b9d0-3919b1659b8f.gvar
+
+## Import
+
+using(babel="c54fb619-aad8-421b-b9d0-3919b1659b8f")
+
+## Server Alias
+
+!serveralias babel <drac2>
+using(babel="c54fb619-aad8-421b-b9d0-3919b1659b8f")
+args = argparse("&*&")
+if args.get("help") or args.last("text") is None:
+    return babel.help()
+text = args.last("text")
+language_from = args.last("from") or "English (Common)"
+language_to = args.last("to") or "English (Common)"
+return babel.alias(text, language_from, language_to)
+</drac2>
+
+"""
+using(embed_utilities="09d308cb-5bf8-4759-8070-19ab0312aa05")
+language_gvars = {
+    'Goblin': "edeabd49-e60c-4f00-8b1a-ca9ca7379db4",
+    'Elvish': "badee552-7bd1-4a1a-8c16-5438fdfa0937"
+}
+
+title = "Babel Fish Translator"
+thumb = "https://traductanet.com/wp-content/uploads/2017/01/586b8224a88f2-1024x724.jpg"
+help_text = "Inspired by the famous fish that helps with alien languages, except this one doesn’t really help—it just looks like it might.\nHere’s the deal: You input English, and it’ll swap out the words for fantastical ones. No complex meanings or deep translations—just substitutions for what it knows, and guesses for the rest.\nIn short:\n- Command: Type your text and pick a fantasy language.\n- Accuracy: Meh.\n- Fun: Infinite.\nImpress your D&D party, confuse your friends, but don’t count on it for real translations."
+
+help_fields = [ embed_utilities.create_field("Usage", "`!babel -text \"Enter text to translate here\" [-from \"<language>\"] [-to <language>]`") ]
+footer = "-footer '!babel -text \"<text>\" [-from \"<language>\"] [-to \"<language>\"] | Made by James Hurburgh#0'"
+
+# help_fields = [ embed_utilities.create_field("Usage", "`!babel -text \"Enter text to translate here\" -to <language>`") ]
+# footer = "-footer '!babel -text \"<text>\" [-to \"<language>\" | Made by James Hurburgh#0'"
+
+supported_languages = language_gvars.keys()
+supported_languages_lower = [language.lower() for language in supported_languages]
+supported_languages_field = embed_utilities.create_field("Supported languages", "\n".join([f"- {language}" for language in supported_languages]))
+help_fields.append(supported_languages_field)
+
+def help():
+    return embed_utilities.create_embed(title, help_text, fields=help_fields, thumb=thumb, footer=footer)
+
+def alias(text, language_from, language_to):
+    if language_from.lower() == language_to.lower():
+        return embed_utilities.create_error_embed(
+            "The language's provided are *too* compatible.",
+            f"To use the translator, you need to provide two different languages. You gave \"**{language_from}**\" and \"**{language_to}**\" (or left them blank, using the defaults). These need to be different. It's like asking a friend to help you move: if both houses are the same, you've wasted time and pizza. If you forget a language, the translator will assume you're using English, like most intergalactic hitchhikers.",
+            fields=[embed_utilities.create_field("You typed this and Avrae probably deleted it.  Now you don't have to retype it.", f"```\n{text}\n```")],
+            thumb=thumb,
+            footer=footer)
+    if (language_from.lower() == "english"
+            or language_from.lower() == "common"
+            or language_from.lower() == "english (common)"
+        ) and (language_to.lower() in supported_languages_lower):
+        dictionary_to = load_yaml(get_gvar(language_gvars[language_to.title()]))
+
+        fields = [
+            embed_utilities.create_field(language_from.title(), text),
+            embed_utilities.create_field(language_to.title(), translate(text, dictionary_to)),
+        ]
+        return embed_utilities.create_embed(title,
+                                            f"Translating from {language_from.title()} to {language_to.title()}.",
+                                            fields=fields,
+                                            thumb=thumb,
+                                            footer=footer)
+    if (language_to.lower() == "english"
+        or language_to.lower() == "common"
+        or language_to.lower() == "english (common)"
+        ) and (language_from.lower() in supported_languages_lower):
+        dictionary_from = load_yaml(get_gvar(language_gvars[language_from.title()]))
+        
+        fields = [
+            embed_utilities.create_field(language_from.title(), text),
+            embed_utilities.create_field(language_to.title(), translate_to_english(text, dictionary_from)),
+        ]
+        return embed_utilities.create_embed(title,
+                                            f"Translating from {language_from.title()} to {language_to.title()}.",
+                                            fields=fields,
+                                            thumb=thumb,
+                                            footer=footer)
+
+    return embed_utilities.create_error_embed(
+        "Couldn't figure out what to do.",
+        f"You asked to translate from **\"{language_from}\"** to \"**{language_to}\"**, but I couldn't.",
+        fields=[
+            supported_languages_field,
+            embed_utilities.create_field("You typed this and Avrae probably deleted it.  Now you don't have to retype it.", f"```\n{text}\n```")
+            ],
+        thumb=thumb,
+        footer=footer)
+    
+def translate_to_english(text, dictionary_from):
+
+    reverse_dictionary = create_reverse_dictionary(dictionary_from)
+    return translate(text, reverse_dictionary)
+
+def create_reverse_dictionary(dictionary_from):
+
+    # Reverse the words mapping
+    words = {}
+    for word, translation in dictionary_from['words'].items():
+        words[translation] = word
+
+    # Reverse the syllable mapping
+    syllable_mapping = {}
+    for syllable, translation in dictionary_from['syllable_mapping'].items():
+        syllable_mapping[translation] = syllable
+
+    reverse_dictionary = {
+        "words": words,
+        "syllable_mapping": syllable_mapping,
+        "syllables_by_length": {}
+    }
+
+    index_syllables_by_length(reverse_dictionary)
+
+    return reverse_dictionary
+
+def translate(text, dictionary):
+
+    index_syllables_by_length(dictionary)
+
+    words = text.split()
+    translated_words = []
+    for word in words:
+        translated_words.append(translate_word(word, dictionary))
+    translation = " ".join(translated_words)
+    return translation
+
+def index_syllables_by_length(dictionary):
+    syllable_mapping = dictionary.syllable_mapping
+    dictionary.syllables_by_length.clear()
+    
+    # Iterate over the syllable mapping keys
+    for key in syllable_mapping.keys():
+        length = len(key)
+        if length not in dictionary.syllables_by_length:
+            dictionary.syllables_by_length[length] = []
+        dictionary.syllables_by_length[length].append(key)
+
+def translate_word(word, dictionary):
+    if word.lower() in dictionary.words.keys():
+        new_word = dictionary.words[word.lower()]
+        if word.isupper():
+            return new_word.upper()
+        elif word.islower():
+            return new_word.lower()
+        else:
+            return new_word.title()
+    
+    syllables = break_into_syllables(word, dictionary)
+
+    translated_syllables = []
+    for syllable in syllables:
+        if syllable.lower() in dictionary.syllable_mapping:
+            matched_syllable = dictionary.syllable_mapping[syllable.lower()]
+            if syllable.isupper():
+                translated_syllables.append(matched_syllable.upper())
+            elif syllable.islower():
+                translated_syllables.append(matched_syllable.lower())
+            else:
+                translated_syllables.append(matched_syllable.title())
+        else:
+            translated_syllables.append(str(syllable))  # Keep original if no match
+    translated_word = "".join(translated_syllables)
+    
+    return translated_word
+
+def break_into_syllables(word, dictionary):
+    syllable_mapping = dictionary.syllable_mapping
+    syllables_by_length = dictionary.syllables_by_length
+
+    # Initialize an empty list to store the syllables
+    syllables = []
+    i = 0
+    
+    # Get the longest syllable length from the mapping
+    max_syllable_length = max([int(key) for key in syllables_by_length.keys()])
+
+    # Iterate through the word to extract syllables
+    while i < len(word):
+        # Track if a syllable match is found
+        found_syllable = False
+
+        # Start checking from the longest possible syllable and reduce the length
+        for length in range(min(max_syllable_length, len(word) - i), 0, -1):
+            substring = word[i:i+length]
+
+            if substring.lower() in syllable_mapping:
+                syllables.append(substring)
+                i += length
+                found_syllable = True
+                break
+
+        if not found_syllable:
+            # If no syllable match, just append the single letter
+            syllables.append(word[i])
+            i += 1
+
+    return syllables
